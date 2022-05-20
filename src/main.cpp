@@ -36,6 +36,29 @@
 
 #include "Protocentral_ADS1220.h"
 #include <SPI.h>
+#include "Seeed_SHT35.h"
+/*SAMD core*/
+#ifdef ARDUINO_SAMD_VARIANT_COMPLIANCE
+    #define SDAPIN  20
+    #define SCLPIN  21
+    #define RSTPIN  7
+    #define SERIAL SerialUSB
+#else
+    #define SDAPIN  A4
+    #define SCLPIN  A5
+    //#define RSTPIN  4
+    #define SERIAL Serial
+#endif
+#define TEMP1 2
+#define TEMP2 4
+bool flag = 1;
+float temp1, hum1;
+float temp2, hum2;
+
+SHT35 sensor(SCLPIN);
+
+
+
 
 //#define PGA          1                 // Programmable Gain = 1
 #define VREF         3.301            // External reference of 3.301
@@ -76,6 +99,11 @@ void setup()
 {
     Serial.begin(9600);
 
+    if (sensor.init()) {
+        SERIAL.println("sensor init failed!!!");
+    }
+
+
     pc_ads1220.begin(ADS1220_CS_PIN,ADS1220_DRDY_PIN);
 
     pc_ads1220.set_data_rate(DR_20SPS);
@@ -84,6 +112,11 @@ void setup()
     pc_ads1220.writeRegister(CONFIG_REG2_ADDRESS,0xE0); //set external voltage reference as AVCC , 50 Hz filtering
 
     pc_ads1220.set_conv_mode_continuous(); //Set continious  mode
+
+    pinMode(TEMP1,OUTPUT);
+    pinMode(TEMP2,OUTPUT);
+    digitalWrite(TEMP1,flag);
+    delay(1000);
 }
 
 void loop()
@@ -96,6 +129,33 @@ void loop()
     if (!(millis() % 5000))
     {
         
+        if (flag)
+        {
+            
+            if (NO_ERROR != sensor.read_meas_data_single_shot(HIGH_REP_WITH_STRCH, &temp1, &hum1))
+            {
+                SERIAL.println("read temp1 failed!!");
+                SERIAL.println("   ");
+                SERIAL.println("   ");
+                SERIAL.println("   ");
+            }
+            else
+            {
+             
+            }
+        }
+        
+        SERIAL.print(temp1);
+        SERIAL.print(',');
+        SERIAL.print(hum1);
+        SERIAL.print(',');
+
+
+
+
+
+
+
         // adc_data=pc_ads1220.Read_SingleShot_SingleEnded_WaitForData(MUX_SE_CH1);
         // Serial.print("\nCh2 (mV): ");
         
@@ -123,9 +183,9 @@ void loop()
                 max_buf[p] = 0;
             }
 
-        Serial.print(convertToRes(pseumed[0]));
+        Serial.print(convertToMilliV(pseumed[0]));
         Serial.print(',');
-        Serial.print(convertToRes(pseumed[1]));
+        Serial.print(convertToMilliV(pseumed[1]));
         Serial.println(',');
 
         //     filter_val[0] += (pseumed[0] - filter_val[0]) * 0.05f;
