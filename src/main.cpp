@@ -75,7 +75,7 @@ volatile bool drdyIntrFlag = false;
 float convertToMilliV(int32_t i32data);
 int32_t convertToRes(float i32data);
 
-const uint8_t adc_ch[2] = {MUX_SE_CH1,MUX_SE_CH2};
+const uint8_t adc_ch[2] = {MUX_SE_CH0,MUX_SE_CH3};
 const uint8_t iter = 3;
 int32_t buf[2][iter] = {0};
 int32_t max_buf[2] = {0};
