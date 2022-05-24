@@ -1,14 +1,4 @@
-//////////////////////////////////////////////////////////////////////////////////////////
-//
-//    Demo code for the ADS1220 24-bit ADC breakout board
-//
-//    Author: Ashwin Whitchurch
-//    Copyright (c) 2018 ProtoCentral
-//
-//    This example sequentially reads all 4 channels in continuous conversion mode
-//
-//    Arduino connections:
-//
+
 //  |ADS1220 pin label| Pin Function         |Arduino Connection|
 //  |-----------------|:--------------------:|-----------------:|
 //  | DRDY            | Data ready Output pin|  D2              |
@@ -22,17 +12,6 @@
 //  | AVDD            | Analog VDD           |  -               |
 //  | AGND            | Analog Gnd           |  -               |
 //
-//    This software is licensed under the MIT License(http://opensource.org/licenses/MIT).
-//
-//   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT
-//   NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-//   IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-//   WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-//   SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-//
-//   For information on how to use, visit https://github.com/Protocentral/Protocentral_ADS1220
-//
-/////////////////////////////////////////////////////////////////////////////////////////
 
 #include "Protocentral_ADS1220.h"
 #include <SPI.h>
@@ -75,7 +54,7 @@ volatile bool drdyIntrFlag = false;
 float convertToMilliV(int32_t i32data);
 int32_t convertToRes(float i32data);
 
-const uint8_t adc_ch[2] = {MUX_SE_CH1,MUX_SE_CH2};
+const uint8_t adc_ch[2] = {MUX_SE_CH1,MUX_SE_CH2}; // AIN1,AIN2
 const uint8_t iter = 3;
 int32_t buf[2][iter] = {0};
 int32_t max_buf[2] = {0};
@@ -121,11 +100,7 @@ void setup()
 
 void loop()
 {
-    // adc_data=pc_ads1220.Read_SingleShot_SingleEnded_WaitForData(MUX_SE_CH0);
-    // //Serial.print("\nCh1 (mV): ");
-    // Serial.print(convertToMilliV(adc_data));
-    // Serial.print(',');
-    // delay(100);
+
     if (!(millis() % 5000))
     {
         
@@ -149,19 +124,6 @@ void loop()
         SERIAL.print(',');
         SERIAL.print(hum1);
         SERIAL.print(',');
-
-
-
-
-
-
-
-        // adc_data=pc_ads1220.Read_SingleShot_SingleEnded_WaitForData(MUX_SE_CH1);
-        // Serial.print("\nCh2 (mV): ");
-        
-
-        // for (int8_t i = 0; i < 20; i++)
-        // {
 
             for (int8_t p = 0; p < 2; p++)
             {
@@ -188,24 +150,10 @@ void loop()
         Serial.print(convertToMilliV(pseumed[1]));
         Serial.println(',');
 
-        //     filter_val[0] += (pseumed[0] - filter_val[0]) * 0.05f;
-        //     filter_val[1] += (pseumed[1] - filter_val[1]) * 0.05f;
-        // }
-
-        //delay(1000);
+      
         
     }
-    //  adc_data=pc_ads1220.Read_SingleShot_SingleEnded_WaitForData(MUX_SE_CH2);
-    // // Serial.print("\nCh3 (mV): ");
-    //  Serial.print(convertToRes(adc_data));
-    //  Serial.print(',');
-    //  delay(100);
 
-    //  adc_data=pc_ads1220.Read_SingleShot_SingleEnded_WaitForData(MUX_SE_CH3);
-    // // Serial.print("\nCh4 (mV): ");
-    //  Serial.print(convertToMilliV(adc_data));
-    //  Serial.println(',');
-    //  delay(100);
 }
 
 float convertToMilliV(int32_t i32data)
