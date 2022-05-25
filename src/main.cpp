@@ -30,9 +30,12 @@
 #endif
 #define TEMP1 2
 #define TEMP2 4
+#define Rset 33750
+#define Kgain 10
 bool flag = 1;
 float temp1, hum1;
 float temp2, hum2;
+
 
 SHT35 sensor(SCLPIN);
 
@@ -52,9 +55,10 @@ Protocentral_ADS1220 pc_ads1220;
 int32_t adc_data;
 volatile bool drdyIntrFlag = false;
 float convertToMilliV(int32_t i32data);
-int32_t convertToRes(float i32data);
+int32_t convertToRes(float i32data, float temp);
+float Vres(float temp);
 
-const uint8_t adc_ch[2] = {MUX_SE_CH1,MUX_SE_CH2}; // AIN1,AIN2
+const uint8_t adc_ch[2] = {MUX_SE_CH0,MUX_SE_CH3}; // AIN1,AIN2
 const uint8_t iter = 3;
 int32_t buf[2][iter] = {0};
 int32_t max_buf[2] = {0};
@@ -158,10 +162,20 @@ void loop()
 
 float convertToMilliV(int32_t i32data)
 {
-    return (float)((i32data*VFSR*1000)/FULL_SCALE);
+    return (float)((i32data * VFSR * 1000) / FULL_SCALE);
 }
 
-int32_t convertToRes(float i32data)
+float Icur(float temp)
 {
-    return (int32_t)((((i32data*VFSR)/FULL_SCALE)*R1)/(VFSR-((i32data*VFSR)/FULL_SCALE)));
+    float Vres(float temp);
+    return (Vres(temp) * 1.059) / Rset;
+}
+float Vres(float temp)
+{    return 0.23 * temp + 58;    }
+
+int32_t convertToRes(float i32data, float temp)
+{
+    float Icur(float temp);
+
+    return (int32_t)((((i32data*VFSR*1000)/FULL_SCALE))/Icur(temp));
 }
