@@ -34,7 +34,7 @@
 #define Rset1 33750
 #define Rset2 33780
 #define Kgain1 10
-#define Kgain2 10.03
+#define Kgain2 10
 
 bool flag = 1;
 float temp1, hum1;
@@ -149,6 +149,11 @@ void loop()
             max_buf[p] = 0;
         }
 
+
+        Serial.print(convertToMilliV(pseumed[0]));
+        Serial.print(',');
+        Serial.print(convertToMilliV(pseumed[1]));
+        Serial.print(',');
         Serial.print(convertToRes1(pseumed[0], temp1));
         Serial.print(',');
         Serial.print(convertToRes2(pseumed[1], temp1));
@@ -164,33 +169,33 @@ float convertToMilliV(int32_t i32data)
 double Icur1(float temp)
 {
     float Vres1(float temp);
-    return (Vres1(temp) * 1.059) / Rset1;
+    return (Vres1(temp) * 1.071) / Rset1;
 }
 float Vres1(float temp)
 {
-    return 0.23 * temp + 58;
+    return  0.2105*temp+57.945;
 }
 
 int32_t convertToRes1(int32_t i32data, float temp)
 {
     double Icur1(float temp);
 
-    return (int32_t)((((i32data * VFSR * 1000) / FULL_SCALE)) / (Icur1(temp) * Kgain1));
+    return (int32_t)((((i32data * VFSR*1000 ) / FULL_SCALE)) / (Icur1(temp) * Kgain1));
 }
 
 double Icur2(float temp)
 {
     float Vres2(float temp);
-    return (Vres2(temp) * 1.059) / Rset2;
+    return (Vres2(temp) * 1.071) / Rset2;
 }
 float Vres2(float temp)
 {
-    return 0.23 * temp + 58;
+    return  0.1682*temp+59.027;
 }
 
 int32_t convertToRes2(int32_t i32data, float temp)
 {
     double Icur2(float temp);
 
-    return (int32_t)((((i32data * VFSR * 1000) / FULL_SCALE)) / (Icur2(temp) * Kgain2));
+    return (int32_t)((((i32data * VFSR*1000 ) / FULL_SCALE)) / (Icur2(temp) * Kgain2));
 }
