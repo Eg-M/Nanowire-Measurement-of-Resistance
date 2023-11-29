@@ -1,2 +1,2 @@
-# ADS1220PW_TEST
+# Resistance measurement for coupled InAs nanowrires
 Test project for data acqusition from two nanowires
